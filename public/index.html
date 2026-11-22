@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -7,7 +6,15 @@
 <meta name="theme-color" content="#101827">
 <title>Dynex</title>
 <style>
-:root{--bg:#101827;--panel:#172337;--panel2:#1d2c43;--blue:#3988ff;--text:#f1f5fb;--muted:#91a0b6;--border:#ffffff17;--gold:#d8ad55}
+:root{
+  --bg:#101827;
+  --panel:#172337;
+  --panel2:#1d2c43;
+  --blue:#3988ff;
+  --text:#f1f5fb;
+  --muted:#91a0b6;
+  --border:#ffffff17;
+}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 button,input,textarea,select{font:inherit}
@@ -30,8 +37,8 @@ nav{display:grid;gap:6px}
 .user img{width:34px;height:34px;border-radius:50%}
 .content{max-width:1450px;margin:auto;padding:30px}
 .page{display:none}
-.page.active{display:block;animation:fade .2s}
-@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.page.active{display:block;animation:fade .18s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .hidden{display:none!important}
 h1{font-size:25px;margin:0 0 8px}
 h2{font-size:19px;margin:0 0 8px}
@@ -46,8 +53,8 @@ p{color:var(--muted);font-size:13px;line-height:1.65}
 .hero h1{font-size:clamp(32px,5vw,49px);line-height:1.12;margin:15px 0}
 .hero h1 span{color:#65a5ff}
 .hero-logo{width:145px;height:145px;display:grid;place-items:center;border-radius:38px;background:linear-gradient(135deg,#62aaff,#174cba);font-size:85px;font-weight:900;transform:rotate(-8deg);box-shadow:0 20px 60px #2468d666;margin-right:30px}
-.stats,.cards,.packages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
-.card,.stat,.settings-card,.package,.panel{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px}
+.stats,.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
+.stat,.settings-card,.panel,.card{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px}
 .stat span,.stat small{display:block;color:var(--muted);font-size:12px}
 .stat strong{display:block;font-size:22px;margin:12px 0 7px;overflow-wrap:anywhere}
 .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 16px}
@@ -75,13 +82,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--blue)}
 textarea{min-height:90px;resize:vertical}
 .toggle{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border);font-size:13px}
 .toggle input{width:18px;accent-color:var(--blue)}
-.banner{padding:30px;border-radius:17px;border:1px solid #d8ad5540;background:linear-gradient(115deg,#302a20,#1a2130)}
-.banner h2{font-size:30px;margin:12px 0}
-.package{position:relative}
-.package.featured{border-color:#3988ff88}
-.package-price{font-size:27px;font-weight:900;margin:15px 0}
-.package-price small{font-size:11px;color:var(--muted)}
-.package button{width:100%;margin-top:10px}
 .info{padding:20px;background:var(--panel);border:1px solid var(--border);border-radius:14px;margin:17px 0}
 .ad-form{display:grid;gap:10px}
 .footer-ad{text-align:center;padding:22px 0;font-size:13px}
@@ -90,7 +90,6 @@ textarea{min-height:90px;resize:vertical}
 .list-row:last-child{border:0}
 .list-row small{display:block;color:var(--muted);margin-top:5px}
 .status{background:#3988ff22;color:#9fc5ff;padding:5px 9px;border-radius:20px;font-size:10px}
-.settings-card{margin:14px 0}
 .profile{display:flex;align-items:center;gap:12px}
 .profile img{width:54px;height:54px;border-radius:50%}
 .color-row{display:flex;align-items:center;gap:12px}
@@ -100,23 +99,45 @@ textarea{min-height:90px;resize:vertical}
 .login-card{width:min(420px,100%);padding:35px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:20px}
 .login-card .logo{margin:auto;width:62px;height:62px;font-size:35px}
 .login-card p{margin:15px 0 24px}
-.toast{position:fixed;right:20px;bottom:20px;padding:14px 18px;background:#1c3556;border:1px solid #3988ff66;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:20}
+.toast{position:fixed;right:20px;bottom:20px;padding:14px 18px;background:#1c3556;border:1px solid #3988ff66;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:calc(100% - 40px)}
 .toast.show{opacity:1}
-.premium-active{outline:2px solid var(--gold);outline-offset:-2px}
-@media(max-width:850px){.sidebar{width:190px;min-width:190px}.content{padding:20px}.packages{grid-template-columns:1fr}}
+.offer-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 12px}
+.offer-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:12px 4px 22px;scrollbar-width:thin}
+.offer-card{flex:0 0 85%;min-width:0;scroll-snap-align:center;background:var(--panel);border:2px solid var(--border);border-radius:20px;padding:26px;opacity:.68;transform:scale(.96);transition:transform .22s,border-color .22s,opacity .22s;min-height:310px}
+.offer-card.active{opacity:1;transform:scale(1);border-color:var(--blue);box-shadow:0 0 0 2px #3988ff20}
+.offer-card h2{font-size:26px;margin:14px 0}
+.offer-price{font-size:32px;font-weight:900;margin:18px 0}
+.offer-price small{font-size:12px;color:var(--muted)}
+.offer-card button{margin-top:15px}
+.offer-dots{display:flex;gap:7px}
+.offer-dot{width:8px;height:8px;border-radius:50%;background:#53647c;border:0;padding:0}
+.offer-dot.active{background:var(--blue);width:22px;border-radius:10px}
+.sound-toggle{font-size:12px}
+.offer-note{font-size:12px;margin-top:12px}
+@media(min-width:900px){.offer-card{flex-basis:70%}}
+@media(max-width:850px){.sidebar{width:190px;min-width:190px}.content{padding:20px}}
 @media(max-width:650px){
-.layout{display:block}.sidebar{width:100%;min-width:0;padding:12px;height:auto}
-.brand{padding:0 5px 12px}.menu-title,.bottom{display:none}
-nav{display:flex;overflow-x:auto}.nav{width:auto;flex-shrink:0;font-size:11px;padding:10px}
-.topbar{height:65px;padding:12px 15px}.content{padding:17px 13px 40px}
-.hero{padding:24px;min-height:230px}.hero-logo{display:none}
-.stats,.cards,.packages,.guild-grid{grid-template-columns:1fr}
-.quick{grid-template-columns:1fr 1fr}.management{grid-template-columns:1fr}
-.tabs{display:flex;overflow-x:auto}.tab{white-space:nowrap}
+.layout{display:block}
+.sidebar{width:100%;min-width:0;padding:12px;height:auto}
+.brand{padding:0 5px 12px}
+.menu-title,.bottom{display:none}
+nav{display:flex;overflow-x:auto}
+.nav{width:auto;flex-shrink:0;font-size:11px;padding:10px}
+.topbar{height:65px;padding:12px 15px}
+.content{padding:17px 13px 40px}
+.hero{padding:24px;min-height:230px}
+.hero-logo{display:none}
+.stats,.cards,.guild-grid{grid-template-columns:1fr}
+.quick{grid-template-columns:1fr 1fr}
+.management{grid-template-columns:1fr}
+.tabs{display:flex;overflow-x:auto}
+.tab{white-space:nowrap}
+.offer-card{flex-basis:92%;padding:21px}
 }
 </style>
 </head>
 <body>
+
 <div class="layout" id="app">
 <aside class="sidebar">
   <div class="brand"><span class="logo">D</span> Dynex</div>
@@ -124,8 +145,8 @@ nav{display:flex;overflow-x:auto}.nav{width:auto;flex-shrink:0;font-size:11px;pa
   <nav>
     <button class="nav active" data-page="home">Ana Sayfa</button>
     <button class="nav" data-page="servers">Sunucularım</button>
-    <button class="nav" data-page="premium">Premium</button>
-    <button class="nav" data-page="ads">Reklamlar</button>
+    <button class="nav" data-page="offers" data-offer="premium">Premium</button>
+    <button class="nav" data-page="offers" data-offer="ads">Reklamlar</button>
     <button class="nav" data-page="transactions">İşlemlerim</button>
   </nav>
   <div class="bottom">
@@ -136,11 +157,17 @@ nav{display:flex;overflow-x:auto}.nav{width:auto;flex-shrink:0;font-size:11px;pa
 
 <main class="main">
 <header class="topbar">
-  <div><div class="top-title" id="pageTitle">Ana Sayfa</div><div class="sub">Dynex yönetim merkezi</div></div>
-  <div id="account"><button class="login" id="loginTop">Discord ile Giriş Yap</button></div>
+  <div>
+    <div class="top-title" id="pageTitle">Ana Sayfa</div>
+    <div class="sub">Dynex yönetim merkezi</div>
+  </div>
+  <div id="account">
+    <button class="login" id="loginTop">Discord ile Giriş Yap</button>
+  </div>
 </header>
 
 <div class="content" id="content">
+
 <section class="page active" id="page-home">
   <div class="hero">
     <div>
@@ -151,22 +178,27 @@ nav{display:flex;overflow-x:auto}.nav{width:auto;flex-shrink:0;font-size:11px;pa
     </div>
     <div class="hero-logo">D</div>
   </div>
+
   <div class="stats">
     <div class="stat"><span>Hesap Bakiyesi</span><strong id="balance">0 DNX</strong><small>Kullanılabilir bakiye</small></div>
     <div class="stat"><span>Premium</span><strong id="premiumStatus">Aktif değil</strong><small>Üyelik durumu</small></div>
     <div class="stat"><span>Discord Hesabı</span><strong id="username">Giriş yapılmadı</strong><small>Bağlı profil</small></div>
   </div>
+
   <div class="section-head"><div><h2>Hızlı Erişim</h2><p>Dynex bölümlerine buradan ulaş.</p></div></div>
   <div class="quick">
     <button data-page="servers"><strong>Sunucularım</strong><small>Sunucularını yönet.</small></button>
-    <button data-page="premium"><strong>Premium</strong><small>Paketleri incele.</small></button>
-    <button data-page="ads"><strong>Reklamlar</strong><small>Reklamlarını takip et.</small></button>
+    <button data-page="offers" data-offer="premium"><strong>Premium</strong><small>Paketleri incele.</small></button>
+    <button data-page="offers" data-offer="ads"><strong>Reklamlar</strong><small>Reklamlarını takip et.</small></button>
     <button data-page="settings"><strong>Ayarlar</strong><small>Hesap tercihlerini düzenle.</small></button>
   </div>
 </section>
 
 <section class="page" id="page-servers">
-  <div class="section-head"><div><h1>Sunucularım</h1><p>Sahibi veya yöneticisi olduğun sunucular.</p></div><button class="secondary" id="refreshGuilds">Yenile</button></div>
+  <div class="section-head">
+    <div><h1>Sunucularım</h1><p>Sahibi veya yöneticisi olduğun sunucular.</p></div>
+    <button class="secondary" id="refreshGuilds">Yenile</button>
+  </div>
   <div class="guild-grid" id="guildList"><div class="empty">Sunucular yükleniyor...</div></div>
 </section>
 
@@ -196,50 +228,75 @@ nav{display:flex;overflow-x:auto}.nav{width:auto;flex-shrink:0;font-size:11px;pa
   </div>
 </section>
 
-<section class="page" id="page-premium">
-  <div class="section-head"><div><h1>Dynex Premium</h1><p>Premium paketlerini incele.</p></div></div>
-  <div class="banner">
-    <span class="eyebrow">DYNEX PREMIUM</span>
-    <h2>Daha fazla özellik,<br>daha fazla kontrol.</h2>
-    <p>Premium özellikleri aktif olduğunda ilgili bölümlerde kullanılabilir hale gelir.</p>
+<section class="page" id="page-offers">
+  <div class="section-head">
+    <div><h1>Dynex Hizmetleri</h1><p>Premium paketleri ve reklam yönetimi.</p></div>
   </div>
-  <div class="packages">
-    <div class="package"><h3>Haftalık</h3><div class="package-price">999K <small>DNXO</small></div><p>7 günlük Premium.</p><button class="secondary" disabled>Satın alma yakında</button></div>
-    <div class="package featured"><span class="eyebrow">ÖNERİLEN</span><h3>Aylık</h3><div class="package-price">1M <small>DNXO</small></div><p>30 günlük Premium.</p><button class="primary" disabled>Satın alma yakında</button></div>
-    <div class="package"><h3>Sınırsız</h3><div class="package-price">2M <small>DNXO</small></div><p>Sınırsız süreli Premium.</p><button class="secondary" disabled>Satın alma yakında</button></div>
-  </div>
-  <p>Ödeme sistemi hazır olduğunda satın alma işlemleri açılacaktır.</p>
-</section>
 
-<section class="page" id="page-ads">
-  <div class="section-head"><div><h1>Reklam Yönetimi</h1><p>Reklam kampanyalarını takip et.</p></div></div>
-  <div class="info">
-    <h3>Reklam sistemi</h3>
-    <p>Reklam satın alındıktan sonra reklam açıklaması, görseli ve Discord sunucu davet bağlantısı istenir. Onaylanan reklamlar yayın sırasına alınır.</p>
-    <p>Botların sesli bildirim sistemi hazır olduğunda reklamlar her sesli bildirimde yayınlanacak şekilde bağlanacaktır.</p>
+  <div class="offer-controls">
+    <div class="offer-dots">
+      <button class="offer-dot active" data-jump="0" aria-label="Premium"></button>
+      <button class="offer-dot" data-jump="1" aria-label="Reklamlar"></button>
+    </div>
+    <button class="secondary sound-toggle" id="soundToggle">Geçiş sesi: Açık</button>
   </div>
-  <div class="section-head"><div><h2>Reklamlarım</h2><p>Reklam kampanyalarının durumu.</p></div><button class="secondary" id="refreshAds">Yenile</button></div>
-  <div class="list" id="adList"><div class="empty">Henüz reklam bulunmuyor.</div></div>
-  <div class="settings-card ad-form">
-    <h2>Reklam oluştur</h2>
-    <p>Ödeme sistemi hazır olduğunda bu form aktif olacak.</p>
-    <label>Reklam açıklaması</label>
-    <textarea id="adDescription" placeholder="Reklam açıklaman..."></textarea>
-    <label>Reklam görseli bağlantısı</label>
-    <input id="adImage" type="url" placeholder="https://...">
-    <label>Discord sunucu davet bağlantısı</label>
-    <input id="adInvite" type="url" placeholder="https://discord.gg/...">
-    <button class="primary" disabled>Reklam satın al</button>
+
+  <div class="offer-track" id="offerTrack">
+    <article class="offer-card active" id="premiumSlide">
+      <span class="eyebrow">DYNEX PREMIUM</span>
+      <h2>Daha fazla özellik,<br>daha fazla kontrol.</h2>
+      <p>Dynex Premium paketlerini incele.</p>
+      <div class="offer-price">999K <small>DNXO / Haftalık</small></div>
+      <p>Haftalık: 7 günlük Premium.</p>
+      <div class="offer-price">1M <small>DNXO / Aylık</small></div>
+      <p>Aylık: 30 günlük Premium.</p>
+      <div class="offer-price">2M <small>DNXO / Sınırsız</small></div>
+      <p>Sınırsız süreli Premium.</p>
+      <button class="primary" id="buyPremium">Premium satın al</button>
+      <p class="offer-note">Ödeme sistemi etkinleştirildiğinde satın alma açılacaktır.</p>
+    </article>
+
+    <article class="offer-card" id="adsSlide">
+      <span class="eyebrow">DYNEX ADS</span>
+      <h2>Reklamını Dynex üzerinden yayınla.</h2>
+      <p>Reklam satın alındıktan sonra açıklama, görsel ve Discord sunucu davet bağlantısı istenir.</p>
+      <div class="info">
+        <h3>Reklam sistemi</h3>
+        <p>Onaylanan reklamlar yayın sırasına alınır. Botların sesli bildirim sistemi hazır olduğunda reklamlar sesli bildirimlere bağlanacaktır.</p>
+      </div>
+      <button class="primary" id="goAdsForm">Reklam oluştur</button>
+      <p class="offer-note">Ödeme sistemi henüz etkinleştirilmedi.</p>
+    </article>
   </div>
-  <div class="footer-ad"><strong>Reklam İçin Bot profilinden Web siteye gidebilirsin!</strong></div>
+
+  <div id="adsDetails">
+    <div class="section-head">
+      <div><h2>Reklamlarım</h2><p>Reklam kampanyalarının durumu.</p></div>
+      <button class="secondary" id="refreshAds">Yenile</button>
+    </div>
+    <div class="list" id="adList"><div class="empty">Henüz reklam bulunmuyor.</div></div>
+
+    <div class="settings-card ad-form" id="adForm">
+      <h2>Reklam oluştur</h2>
+      <p>Ödeme sistemi hazır olduğunda form aktif olacak.</p>
+      <label>Reklam açıklaması</label>
+      <textarea id="adDescription" placeholder="Reklam açıklaman..."></textarea>
+      <label>Reklam görseli bağlantısı</label>
+      <input id="adImage" type="url" placeholder="https://...">
+      <label>Discord sunucu davet bağlantısı</label>
+      <input id="adInvite" type="url" placeholder="https://discord.gg/...">
+      <button class="primary" id="buyAd">Reklam satın al</button>
+    </div>
+    <div class="footer-ad"><strong>Reklam İçin Bot profilinden Web siteye gidebilirsin!</strong></div>
+  </div>
 </section>
 
 <section class="page" id="page-transactions">
   <div class="section-head"><div><h1>İşlemlerim</h1><p>Hesap işlemlerini ve aboneliklerini takip et.</p></div></div>
   <div class="cards">
     <div class="settings-card"><h3>Aktif Premium Paketim</h3><p id="activePremium">Aktif Premium paketin bulunmuyor.</p></div>
-    <div class="settings-card"><h3>Reklamlarım</h3><p>Reklam kampanyalarını incele.</p><button class="secondary" data-page="ads">Reklamları Gör</button></div>
-    <div class="settings-card"><h3>Premium iptali</h3><p>Premium yönetimi ödeme sistemiyle birlikte açılacak.</p><button class="secondary" disabled>Premium yönetimi yakında</button></div>
+    <div class="settings-card"><h3>Reklamlarım</h3><p>Reklam kampanyalarını incele.</p><button class="secondary" data-page="offers" data-offer="ads">Reklamları Gör</button></div>
+    <div class="settings-card"><h3>Premium iptali</h3><p>Premium yönetimi ödeme sistemiyle birlikte açılacak.</p><button class="secondary" id="cancelPremium">Premium iptal et</button></div>
   </div>
   <div class="section-head"><div><h2>İşlem Geçmişi</h2><p>Son hesap hareketlerin.</p></div></div>
   <div class="list" id="transactionList"><div class="empty">Henüz işlem bulunmuyor.</div></div>
@@ -249,7 +306,10 @@ nav{display:flex;overflow-x:auto}.nav{width:auto;flex-shrink:0;font-size:11px;pa
   <div class="section-head"><div><h1>Hesap Ayarları</h1><p>Dynex hesap tercihlerini düzenle.</p></div></div>
   <div class="settings-card">
     <h2>Profil</h2>
-    <div class="profile"><img id="avatar" alt="Profil"><div><strong id="settingsUsername">Giriş yapılmadı</strong><p>Discord hesabınla bağlantılı profil.</p></div></div>
+    <div class="profile">
+      <img id="avatar" alt="Profil">
+      <div><strong id="settingsUsername">Giriş yapılmadı</strong><p>Discord hesabınla bağlantılı profil.</p></div>
+    </div>
   </div>
   <div class="settings-card">
     <h2>Site dili</h2><p>Site arayüzünde kullanmak istediğin dili seç.</p>
@@ -261,6 +321,7 @@ nav{display:flex;overflow-x:auto}.nav{width:auto;flex-shrink:0;font-size:11px;pa
   </div>
   <button class="primary" id="saveAccount">Ayarları Kaydet</button>
 </section>
+
 </div>
 </main>
 </div>
@@ -274,144 +335,638 @@ nav{display:flex;overflow-x:auto}.nav{width:auto;flex-shrink:0;font-size:11px;pa
     <div class="sub">Giriş işlemi Discord üzerinden gerçekleştirilir.</div>
   </div>
 </div>
-<div class="toast" id="toast"></div>
+
+<div class="toast" id="toast" role="status"></div>
 
 <script>
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
-let me=null,guild=null,section="general",guildData={};
+
+let me=null;
+let guild=null;
+let section="general";
+let guildData={};
+let currentPage="home";
+let soundEnabled=true;
+let audioContext=null;
+let offerIndex=0;
 
 const names={
-general:"Genel Ayarlar",tickets:"Ticket Sistemi",moderation:"Moderasyon",
-welcome:"Hoş Geldin",logs:"Log Sistemi",automod:"Otomatik Moderasyon",
-autoroles:"Otomatik Roller",autoreplies:"Otomatik Yanıt",
-embeds:"Embed Tasarımları",permissions:"Rol Yetkileri"
+  general:"Genel Ayarlar",
+  tickets:"Ticket Sistemi",
+  moderation:"Moderasyon",
+  welcome:"Hoş Geldin",
+  logs:"Log Sistemi",
+  automod:"Otomatik Moderasyon",
+  autoroles:"Otomatik Roller",
+  autoreplies:"Otomatik Yanıt",
+  embeds:"Embed Tasarımları",
+  permissions:"Rol Yetkileri"
 };
 
 const fields={
-general:[["enabled","Dynex aktif olsun","toggle"],["language","Sunucu dili","language"]],
-tickets:[["enabled","Ticket sistemi aktif","toggle"],["categoryId","Ticket kategori ID","text"],["supportRoleId","Destek rolü ID","text"],["panelTitle","Panel başlığı","text"],["panelDescription","Panel açıklaması","textarea"]],
-moderation:[["enabled","Moderasyon aktif","toggle"],["logChannelId","Moderasyon log kanalı ID","text"]],
-welcome:[["enabled","Hoş geldin mesajı aktif","toggle"],["channelId","Karşılama kanalı ID","text"],["message","Karşılama mesajı","textarea"]],
-logs:[["enabled","Log sistemi aktif","toggle"],["channelId","Log kanalı ID","text"]],
-automod:[["enabled","Otomatik moderasyon aktif","toggle"],["antiSpam","Spam koruması","toggle"],["antiLinks","Bağlantı koruması","toggle"]],
-autoroles:[["enabled","Otomatik rol aktif","toggle"],["roleId","Verilecek rol ID","text"]],
-autoreplies:[["enabled","Otomatik yanıt aktif","toggle"],["trigger","Tetikleyici mesaj","text"],["reply","Yanıt mesajı","textarea"]],
-embeds:[["title","Embed başlığı","text"],["description","Embed açıklaması","textarea"],["color","Embed rengi","color"]],
-permissions:[["managerRoleId","Yönetici rolü ID","text"],["moderatorRoleId","Moderatör rolü ID","text"]]
+  general:[["enabled","Dynex aktif olsun","toggle"],["language","Sunucu dili","language"]],
+  tickets:[["enabled","Ticket sistemi aktif","toggle"],["categoryId","Ticket kategori ID","text"],["supportRoleId","Destek rolü ID","text"],["panelTitle","Panel başlığı","text"],["panelDescription","Panel açıklaması","textarea"]],
+  moderation:[["enabled","Moderasyon aktif","toggle"],["logChannelId","Moderasyon log kanalı ID","text"]],
+  welcome:[["enabled","Hoş geldin mesajı aktif","toggle"],["channelId","Karşılama kanalı ID","text"],["message","Karşılama mesajı","textarea"]],
+  logs:[["enabled","Log sistemi aktif","toggle"],["channelId","Log kanalı ID","text"]],
+  automod:[["enabled","Otomatik moderasyon aktif","toggle"],["antiSpam","Spam koruması","toggle"],["antiLinks","Bağlantı koruması","toggle"]],
+  autoroles:[["enabled","Otomatik rol aktif","toggle"],["roleId","Verilecek rol ID","text"]],
+  autoreplies:[["enabled","Otomatik yanıt aktif","toggle"],["trigger","Tetikleyici mesaj","text"],["reply","Yanıt mesajı","textarea"]],
+  embeds:[["title","Embed başlığı","text"],["description","Embed açıklaması","textarea"],["color","Embed rengi","color"]],
+  permissions:[["managerRoleId","Yönetici rolü ID","text"],["moderatorRoleId","Moderatör rolü ID","text"]]
 };
 
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
-function notify(message){const t=$("#toast");t.textContent=message;t.classList.add("show");clearTimeout(notify.timer);notify.timer=setTimeout(()=>t.classList.remove("show"),3000);}
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[c]));
+}
+
+function notify(message){
+  const t=$("#toast");
+  t.textContent=message;
+  t.classList.add("show");
+  clearTimeout(notify.timer);
+  notify.timer=setTimeout(()=>t.classList.remove("show"),3000);
+}
+
 async function api(url,options={}){
- const r=await fetch(url,{credentials:"same-origin",...options,headers:{"Content-Type":"application/json",...(options.headers||{})}});
- const d=await r.json().catch(()=>({}));
- if(r.status===401){showLogin();throw Error("Önce Discord hesabınla giriş yap.");}
- if(!r.ok)throw Error(d.error||"Bir hata oluştu.");
- return d;
+  const r=await fetch(url,{
+    credentials:"same-origin",
+    ...options,
+    headers:{
+      "Content-Type":"application/json",
+      ...(options.headers||{})
+    }
+  });
+
+  const d=await r.json().catch(()=>({}));
+
+  if(r.status===401){
+    showLogin();
+    throw Error("Önce Discord hesabınla giriş yap.");
+  }
+
+  if(!r.ok)throw Error(d.error||"Bir hata oluştu.");
+  return d;
 }
-function login(){location.href="/auth/discord";}
-function showLogin(){$("#loginScreen").classList.remove("hidden");$("#content").classList.add("hidden");}
-function page(p){
- $$(".page").forEach(x=>x.classList.remove("active"));
- const target=$("#page-"+p);if(!target)return;
- target.classList.add("active");
- $$(".nav[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
- $("#pageTitle").textContent=({home:"Ana Sayfa",servers:"Sunucularım",guild:"Sunucu Yönetimi",premium:"Premium",ads:"Reklamlar",transactions:"İşlemlerim",settings:"Ayarlar"})[p]||"Dynex";
- if(p==="servers")loadGuilds();
- if(p==="ads")loadAds();
- if(p==="transactions")loadTransactions();
- window.scrollTo({top:0,behavior:"smooth"});
+
+/* YALNIZCA DISCORD GİRİŞİ DIŞ SAYFAYA GİDER */
+
+function login(){
+  window.location.assign("/auth/discord");
 }
-async function loadMe(){
- try{
-  me=await api("/api/me");
+
+function showLogin(){
+  $("#loginScreen").classList.remove("hidden");
+  $("#content").classList.add("hidden");
+}
+
+function showApp(){
   $("#loginScreen").classList.add("hidden");
   $("#content").classList.remove("hidden");
-  const avatar=me.avatar?`https://cdn.discordapp.com/avatars/${me.id}/${me.avatar}.png?size=128`:"https://cdn.discordapp.com/embed/avatars/0.png";
-  $("#account").innerHTML=`<div class="user"><img src="${avatar}" alt=""><span>${esc(me.username)}</span></div>`;
-  $("#username").textContent=me.username;
-  $("#settingsUsername").textContent=me.username;
-  $("#avatar").src=avatar;
-  const balance=Number(me.balance_dnx||0);
-  $("#balance").textContent=me.premium?`${(balance/1000).toLocaleString("tr-TR")} DNXO`:`${balance.toLocaleString("tr-TR")} DNX`;
-  $("#premiumStatus").textContent=me.premium?"Aktif":"Aktif değil";
-  $("#activePremium").textContent=me.premium?"Premium hesabın aktif.":"Aktif Premium paketin bulunmuyor.";
-  if(me.premium)$("#app").classList.add("premium-active");
-  $("#language").value=me.language||"tr";
-  $("#themeColor").value=me.theme_color||"#101827";
-  $("#colorText").textContent=$("#themeColor").value;
-  document.documentElement.style.setProperty("--bg",me.theme_color||"#101827");
- }catch(e){showLogin();}
 }
+
+/* SPA SAYFA GEÇİŞLERİ */
+
+function page(p,options={}){
+  const target=$("#page-"+p);
+  if(!target)return;
+
+  currentPage=p;
+
+  $$(".page").forEach(x=>x.classList.remove("active"));
+  target.classList.add("active");
+
+  $$(".nav[data-page]").forEach(x=>{
+    const same=x.dataset.page===p;
+    const offerMatch=p==="offers"&&x.dataset.offer===options.offer;
+    x.classList.toggle("active",same&&(p!=="offers"||offerMatch));
+  });
+
+  const titles={
+    home:"Ana Sayfa",
+    servers:"Sunucularım",
+    guild:"Sunucu Yönetimi",
+    offers:"Dynex Hizmetleri",
+    transactions:"İşlemlerim",
+    settings:"Ayarlar"
+  };
+
+  $("#pageTitle").textContent=titles[p]||"Dynex";
+
+  if(p==="servers")loadGuilds();
+  if(p==="offers"){
+    if(options.offer==="ads")goToOffer(1,false);
+    else goToOffer(0,false);
+    loadAds();
+  }
+  if(p==="transactions")loadTransactions();
+
+  if(options.history!==false){
+    const url=p==="offers"
+      ?`/?page=offers&offer=${options.offer||"premium"}`
+      :`/?page=${p}`;
+    history.pushState({page:p,offer:options.offer||"premium"}, "", url);
+  }
+
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+window.addEventListener("popstate",event=>{
+  const state=event.state;
+  if(state&&state.page){
+    page(state.page,{history:false,offer:state.offer});
+  }else{
+    const params=new URLSearchParams(location.search);
+    page(params.get("page")||"home",{
+      history:false,
+      offer:params.get("offer")||"premium"
+    });
+  }
+});
+
+document.addEventListener("click",event=>{
+  const button=event.target.closest("[data-page]");
+  if(!button)return;
+
+  const p=button.dataset.page;
+  const offer=button.dataset.offer||"premium";
+  page(p,{offer});
+});
+
+/* HESAP */
+
+async function loadMe(){
+  try{
+    me=await api("/api/me");
+    showApp();
+
+    const avatar=me.avatar
+      ?`https://cdn.discordapp.com/avatars/${me.id}/${me.avatar}.png?size=128`
+      :"https://cdn.discordapp.com/embed/avatars/0.png";
+
+    $("#account").innerHTML=`
+      <div class="user">
+        <img src="${avatar}" alt="">
+        <span>${esc(me.username)}</span>
+      </div>`;
+
+    $("#username").textContent=me.username;
+    $("#settingsUsername").textContent=me.username;
+    $("#avatar").src=avatar;
+
+    const balance=Number(me.balance_dnx||0);
+    $("#balance").textContent=me.premium
+      ?`${(balance/1000).toLocaleString("tr-TR")} DNXO`
+      :`${balance.toLocaleString("tr-TR")} DNX`;
+
+    $("#premiumStatus").textContent=me.premium?"Aktif":"Aktif değil";
+    $("#activePremium").textContent=me.premium
+      ?"Premium hesabın aktif."
+      :"Aktif Premium paketin bulunmuyor.";
+
+    $("#language").value=me.language||"tr";
+    $("#themeColor").value=me.theme_color||"#101827";
+    $("#colorText").textContent=$("#themeColor").value;
+
+    document.documentElement.style.setProperty(
+      "--bg",
+      me.theme_color||"#101827"
+    );
+
+  }catch(error){
+    showLogin();
+  }
+}
+
+/* SUNUCULAR */
+
 async function loadGuilds(){
- const box=$("#guildList");box.innerHTML='<div class="empty">Sunucular yükleniyor...</div>';
- try{
-  const list=await api("/api/guilds");
-  if(!list.length){box.innerHTML='<div class="empty">Yönetebileceğin sunucu bulunamadı.</div>';return;}
-  box.innerHTML=list.map(g=>`<button class="guild" data-id="${esc(g.id)}"><span class="guild-icon">${g.icon?`<img src="https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png?size=128" alt="">`:esc(g.name.slice(0,1))}</span><span><strong>${esc(g.name)}</strong><small>${g.botPresent?"Dynex sunucuda":"Dynex henüz eklenmemiş"}</small></span></button>`).join("");
-  $$(".guild").forEach(b=>b.addEventListener("click",()=>openGuild(list.find(g=>g.id===b.dataset.id))));
- }catch(e){box.innerHTML=`<div class="empty">${esc(e.message)}</div>`;}
+  const box=$("#guildList");
+  box.innerHTML='<div class="empty">Sunucular yükleniyor...</div>';
+
+  try{
+    const list=await api("/api/guilds");
+
+    if(!list.length){
+      box.innerHTML='<div class="empty">Yönetebileceğin sunucu bulunamadı.</div>';
+      return;
+    }
+
+    box.innerHTML=list.map(g=>`
+      <button class="guild" data-id="${esc(g.id)}">
+        <span class="guild-icon">
+          ${g.icon
+            ?`<img src="https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png?size=128" alt="">`
+            :esc(g.name.slice(0,1))}
+        </span>
+        <span>
+          <strong>${esc(g.name)}</strong>
+          <small>${g.botPresent?"Dynex sunucuda":"Dynex henüz eklenmemiş"}</small>
+        </span>
+      </button>
+    `).join("");
+
+    $$(".guild").forEach(b=>{
+      b.addEventListener("click",()=>{
+        openGuild(list.find(g=>g.id===b.dataset.id));
+      });
+    });
+
+  }catch(error){
+    box.innerHTML=`<div class="empty">${esc(error.message)}</div>`;
+  }
 }
+
 async function openGuild(g){
- guild=g;$("#guildName").textContent=g.name;
- try{
-  const data=await api("/api/guild/"+g.id);
-  guildData=data.settings||{};
-  guildData.general={...(guildData.general||{}),language:data.language||"tr"};
-  page("guild");selectSection("general");
- }catch(e){notify(e.message);}
+  if(!g)return;
+
+  guild=g;
+  $("#guildName").textContent=g.name;
+
+  try{
+    const data=await api("/api/guild/"+encodeURIComponent(g.id));
+    guildData=data.settings||{};
+    guildData.general={
+      ...(guildData.general||{}),
+      language:data.language||"tr"
+    };
+
+    page("guild");
+    selectSection("general");
+  }catch(error){
+    notify(error.message);
+  }
 }
+
 function selectSection(s){
- section=s;
- $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.section===s));
- $("#sectionTitle").textContent=names[s];
- const values=guildData[s]||{};
- $("#settingsForm").innerHTML=(fields[s]||[]).map(([key,label,type])=>{
-  const value=values[key]??"";
-  if(type==="toggle")return `<label class="toggle"><span>${esc(label)}</span><input type="checkbox" data-setting="${key}" ${value?"checked":""}></label>`;
-  if(type==="language")return `<div class="field"><label>${esc(label)}</label><select data-setting="${key}"><option value="tr" ${value==="tr"?"selected":""}>Türkçe</option><option value="en" ${value==="en"?"selected":""}>English</option></select></div>`;
-  if(type==="textarea")return `<div class="field"><label>${esc(label)}</label><textarea data-setting="${key}">${esc(value)}</textarea></div>`;
-  return `<div class="field"><label>${esc(label)}</label><input type="${type==="color"?"color":"text"}" data-setting="${key}" value="${esc(value)}"></div>`;
- }).join("");
+  section=s;
+
+  $$(".tab").forEach(b=>{
+    b.classList.toggle("active",b.dataset.section===s);
+  });
+
+  $("#sectionTitle").textContent=names[s];
+
+  const values=guildData[s]||{};
+
+  $("#settingsForm").innerHTML=(fields[s]||[]).map(([key,label,type])=>{
+    const value=values[key]??"";
+
+    if(type==="toggle"){
+      return `
+        <label class="toggle">
+          <span>${esc(label)}</span>
+          <input type="checkbox" data-setting="${key}" ${value?"checked":""}>
+        </label>`;
+    }
+
+    if(type==="language"){
+      return `
+        <div class="field">
+          <label>${esc(label)}</label>
+          <select data-setting="${key}">
+            <option value="tr" ${value==="tr"?"selected":""}>Türkçe</option>
+            <option value="en" ${value==="en"?"selected":""}>English</option>
+          </select>
+        </div>`;
+    }
+
+    if(type==="textarea"){
+      return `
+        <div class="field">
+          <label>${esc(label)}</label>
+          <textarea data-setting="${key}">${esc(value)}</textarea>
+        </div>`;
+    }
+
+    return `
+      <div class="field">
+        <label>${esc(label)}</label>
+        <input type="${type==="color"?"color":"text"}"
+          data-setting="${key}" value="${esc(value)}">
+      </div>`;
+  }).join("");
 }
+
 async function saveGuild(){
- if(!guild)return;
- const values={};
- $$("[data-setting]").forEach(x=>values[x.dataset.setting]=x.type==="checkbox"?x.checked:x.value);
- try{
-  await api("/api/guild/"+guild.id,{method:"PUT",body:JSON.stringify({section,values})});
-  guildData[section]=values;notify("Sunucu ayarları kaydedildi.");
- }catch(e){notify(e.message);}
+  if(!guild)return;
+
+  const values={};
+
+  $$("[data-setting]").forEach(x=>{
+    values[x.dataset.setting]=x.type==="checkbox"?x.checked:x.value;
+  });
+
+  const button=$("#saveGuild");
+  button.disabled=true;
+  button.textContent="Kaydediliyor...";
+
+  try{
+    await api("/api/guild/"+encodeURIComponent(guild.id),{
+      method:"PUT",
+      body:JSON.stringify({section,values})
+    });
+
+    guildData[section]=values;
+    notify("Sunucu ayarları kaydedildi.");
+  }catch(error){
+    notify(error.message);
+  }finally{
+    button.disabled=false;
+    button.textContent="Ayarları Kaydet";
+  }
 }
+
+/* REKLAMLAR */
+
 async function loadAds(){
- const box=$("#adList");
- try{
-  const ads=await api("/api/ads");
-  box.innerHTML=ads.length?ads.map(a=>`<div class="list-row"><div><strong>Reklam #${a.id}</strong><small>${esc(a.description)}</small></div><span class="status">${esc(a.status)}</span></div>`).join(""):'<div class="empty">Henüz reklam bulunmuyor.</div>';
- }catch(e){box.innerHTML=`<div class="empty">${esc(e.message)}</div>`;}
+  const box=$("#adList");
+
+  try{
+    const ads=await api("/api/ads");
+
+    box.innerHTML=ads.length
+      ?ads.map(a=>`
+        <div class="list-row">
+          <div>
+            <strong>Reklam #${esc(a.id)}</strong>
+            <small>${esc(a.description)}</small>
+          </div>
+          <span class="status">${esc(a.status)}</span>
+        </div>
+      `).join("")
+      :'<div class="empty">Henüz reklam bulunmuyor.</div>';
+
+  }catch(error){
+    box.innerHTML=`<div class="empty">${esc(error.message)}</div>`;
+  }
 }
+
+async function buyAd(){
+  const description=$("#adDescription").value.trim();
+  const imageUrl=$("#adImage").value.trim();
+  const inviteUrl=$("#adInvite").value.trim();
+
+  if(!description||!imageUrl||!inviteUrl){
+    notify("Lütfen reklam açıklamasını, görseli ve davet bağlantısını doldur.");
+    return;
+  }
+
+  try{
+    await api("/api/ads",{
+      method:"POST",
+      body:JSON.stringify({
+        description,
+        imageUrl,
+        inviteUrl
+      })
+    });
+  }catch(error){
+    notify(error.message);
+  }
+}
+
+/* PREMIUM */
+
+async function buyPremium(){
+  try{
+    await api("/api/premium/purchase",{
+      method:"POST",
+      body:JSON.stringify({})
+    });
+  }catch(error){
+    notify(error.message);
+  }
+}
+
+async function cancelPremium(){
+  try{
+    await api("/api/premium/cancel",{
+      method:"POST",
+      body:JSON.stringify({})
+    });
+  }catch(error){
+    notify(error.message);
+  }
+}
+
+/* İŞLEMLER */
+
 async function loadTransactions(){
- const box=$("#transactionList");
- try{
-  const rows=await api("/api/transactions");
-  box.innerHTML=rows.length?rows.map(x=>`<div class="list-row"><div><strong>${esc(x.description)}</strong><small>${new Date(x.created_at).toLocaleString("tr-TR")}</small></div><span>${Number(x.amount_dnx).toLocaleString("tr-TR")} DNX</span></div>`).join(""):'<div class="empty">Henüz işlem bulunmuyor.</div>';
- }catch(e){box.innerHTML=`<div class="empty">${esc(e.message)}</div>`;}
+  const box=$("#transactionList");
+
+  try{
+    const rows=await api("/api/transactions");
+
+    box.innerHTML=rows.length
+      ?rows.map(x=>`
+        <div class="list-row">
+          <div>
+            <strong>${esc(x.description)}</strong>
+            <small>${new Date(x.created_at).toLocaleString("tr-TR")}</small>
+          </div>
+          <span>${Number(x.amount_dnx).toLocaleString("tr-TR")} DNX</span>
+        </div>
+      `).join("")
+      :'<div class="empty">Henüz işlem bulunmuyor.</div>';
+
+  }catch(error){
+    box.innerHTML=`<div class="empty">${esc(error.message)}</div>`;
+  }
 }
+
+/* AYARLAR */
+
 async function saveAccount(){
- const language=$("#language").value,themeColor=$("#themeColor").value;
- try{
-  await api("/api/account",{method:"PUT",body:JSON.stringify({language,themeColor})});
-  document.documentElement.style.setProperty("--bg",themeColor);
-  $("#colorText").textContent=themeColor;notify("Hesap ayarların kaydedildi.");
- }catch(e){notify(e.message);}
+  const language=$("#language").value;
+  const themeColor=$("#themeColor").value;
+  const button=$("#saveAccount");
+
+  button.disabled=true;
+  button.textContent="Kaydediliyor...";
+
+  try{
+    await api("/api/account",{
+      method:"PUT",
+      body:JSON.stringify({language,themeColor})
+    });
+
+    document.documentElement.style.setProperty("--bg",themeColor);
+    $("#colorText").textContent=themeColor;
+    notify("Hesap ayarların kaydedildi.");
+
+  }catch(error){
+    notify(error.message);
+  }finally{
+    button.disabled=false;
+    button.textContent="Ayarları Kaydet";
+  }
 }
+
+/* ÇIKIŞ */
+
 async function logout(){
- try{await api("/auth/logout",{method:"POST"});location.reload();}
- catch(e){notify(e.message);}
+  const button=$("#logout");
+  button.disabled=true;
+
+  try{
+    await api("/auth/logout",{method:"POST"});
+
+    me=null;
+    guild=null;
+    $("#account").innerHTML='<button class="login" id="loginTop">Discord ile Giriş Yap</button>';
+    $("#loginTop").addEventListener("click",login);
+    $("#username").textContent="Giriş yapılmadı";
+    $("#settingsUsername").textContent="Giriş yapılmadı";
+    $("#balance").textContent="0 DNX";
+    $("#premiumStatus").textContent="Aktif değil";
+
+    showLogin();
+    history.replaceState({page:"home"},"","/");
+    notify("Hesabından çıkış yapıldı.");
+
+  }catch(error){
+    notify(error.message);
+  }finally{
+    button.disabled=false;
+  }
 }
-$$("[data-page]").forEach(b=>b.addEventListener("click",()=>page(b.dataset.page)));
-$$(".tab").forEach(b=>b.addEventListener("click",()=>selectSection(b.dataset.section)));
+
+/* PREMIUM / REKLAM KAYDIRMA */
+
+function playSwitchSound(){
+  if(!soundEnabled)return;
+
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx)return;
+
+    if(!audioContext)audioContext=new AudioCtx();
+    if(audioContext.state==="suspended")audioContext.resume();
+
+    const oscillator=audioContext.createOscillator();
+    const gain=audioContext.createGain();
+
+    oscillator.type="sine";
+    oscillator.frequency.setValueAtTime(620,audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(
+      880,
+      audioContext.currentTime+0.07
+    );
+
+    gain.gain.setValueAtTime(0.0001,audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      0.07,
+      audioContext.currentTime+0.015
+    );
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      audioContext.currentTime+0.12
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime+0.13);
+  }catch(error){}
+}
+
+function updateOfferSelection(index,playSound=false){
+  index=index?1:0;
+
+  const changed=index!==offerIndex;
+  offerIndex=index;
+
+  $("#premiumSlide").classList.toggle("active",index===0);
+  $("#adsSlide").classList.toggle("active",index===1);
+
+  $$(".offer-dot").forEach((dot,i)=>{
+    dot.classList.toggle("active",i===index);
+  });
+
+  $$(".nav[data-page='offers']").forEach(button=>{
+    button.classList.toggle(
+      "active",
+      button.dataset.offer===(index===0?"premium":"ads")
+    );
+  });
+
+  if(playSound&&changed)playSwitchSound();
+}
+
+function goToOffer(index,playSound=true){
+  const track=$("#offerTrack");
+  const slide=index===0?$("#premiumSlide"):$("#adsSlide");
+
+  if(!track||!slide)return;
+
+  updateOfferSelection(index,playSound);
+
+  track.scrollTo({
+    left:slide.offsetLeft-track.offsetLeft,
+    behavior:"smooth"
+  });
+}
+
+let scrollTimer=null;
+
+$("#offerTrack").addEventListener("scroll",()=>{
+  clearTimeout(scrollTimer);
+
+  scrollTimer=setTimeout(()=>{
+    const track=$("#offerTrack");
+    const middle=track.scrollLeft+track.clientWidth/2;
+
+    const premiumMiddle=$("#premiumSlide").offsetLeft+
+      $("#premiumSlide").offsetWidth/2-track.offsetLeft;
+
+    const adsMiddle=$("#adsSlide").offsetLeft+
+      $("#adsSlide").offsetWidth/2-track.offsetLeft;
+
+    const selected=Math.abs(middle-adsMiddle)<
+      Math.abs(middle-premiumMiddle)?1:0;
+
+    updateOfferSelection(selected,true);
+  },70);
+});
+
+$$("[data-jump]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    goToOffer(Number(button.dataset.jump));
+  });
+});
+
+$("#soundToggle").addEventListener("click",()=>{
+  soundEnabled=!soundEnabled;
+  $("#soundToggle").textContent=
+    `Geçiş sesi: ${soundEnabled?"Açık":"Kapalı"}`;
+
+  if(soundEnabled)playSwitchSound();
+});
+
+$("#goAdsForm").addEventListener("click",()=>{
+  $("#adsDetails").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+$("#buyPremium").addEventListener("click",buyPremium);
+$("#buyAd").addEventListener("click",buyAd);
+$("#cancelPremium").addEventListener("click",cancelPremium);
+
+/* DİĞER DÜĞMELER */
+
+$$(".tab").forEach(button=>{
+  button.addEventListener("click",()=>{
+    selectSection(button.dataset.section);
+  });
+});
+
 $("#loginTop").addEventListener("click",login);
 $("#loginMain").addEventListener("click",login);
 $("#logout").addEventListener("click",logout);
@@ -419,10 +974,27 @@ $("#refreshGuilds").addEventListener("click",loadGuilds);
 $("#refreshAds").addEventListener("click",loadAds);
 $("#saveGuild").addEventListener("click",saveGuild);
 $("#saveAccount").addEventListener("click",saveAccount);
-$("#themeColor").addEventListener("input",e=>{
- $("#colorText").textContent=e.target.value;
- document.documentElement.style.setProperty("--bg",e.target.value);
+
+$("#themeColor").addEventListener("input",event=>{
+  $("#colorText").textContent=event.target.value;
+  document.documentElement.style.setProperty("--bg",event.target.value);
 });
+
+/* İLK AÇILIŞ */
+
+const initialParams=new URLSearchParams(location.search);
+const initialPage=initialParams.get("page")||"home";
+const initialOffer=initialParams.get("offer")||"premium";
+
+history.replaceState({
+  page:initialPage,
+  offer:initialOffer
+},"",location.href);
+
+if(initialPage!=="home"){
+  page(initialPage,{history:false,offer:initialOffer});
+}
+
 loadMe();
 </script>
 </body>
