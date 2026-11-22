@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 
 const express = require("express");
@@ -11,16 +10,12 @@ const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
+
+const CLIENT_ID = "1573653820104515604";
+const SITE_URL = "https://dynex-web-sitesi.enzonic.dev";
 const REDIRECT_URI = `${SITE_URL}/auth/discord/callback`;
 
-for (const key of [
-  "CLIENT_ID",
-  "CLIENT_SECRET",
-  "SESSION_SECRET",
-  "DATABASE_URL",
-  "SITE_URL"
-]) {
+for (const key of ["CLIENT_SECRET", "SESSION_SECRET", "DATABASE_URL"]) {
   if (!process.env[key]) {
     console.error(`Eksik ortam değişkeni: ${key}`);
     process.exit(1);
@@ -112,7 +107,9 @@ async function initDatabase() {
 
 function requireLogin(req, res, next) {
   if (!req.session.userId) {
-    return res.status(401).json({ error: "Discord hesabınla giriş yapmalısın." });
+    return res.status(401).json({
+      error: "Discord hesabınla giriş yapmalısın."
+    });
   }
   next();
 }
@@ -146,8 +143,12 @@ async function getFreshToken(userId) {
     return user.access_token;
   }
 
+  if (!user.refresh_token) {
+    throw new Error("Discord oturumu yenilenemedi. Tekrar giriş yap.");
+  }
+
   const body = new URLSearchParams({
-    client_id: process.env.CLIENT_ID,
+    client_id: CLIENT_ID,
     client_secret: process.env.CLIENT_SECRET,
     grant_type: "refresh_token",
     refresh_token: user.refresh_token
@@ -157,7 +158,9 @@ async function getFreshToken(userId) {
     "https://discord.com/api/oauth2/token",
     {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
       body
     }
   );
@@ -182,7 +185,11 @@ async function getUserGuilds(userId) {
 
   return discordRequest(
     "https://discord.com/api/users/@me/guilds",
-    { headers: { Authorization: `Bearer ${token}` } }
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
   );
 }
 
@@ -193,6 +200,7 @@ async function canManageGuild(userId, guildId) {
   if (!guild) return false;
 
   const permissions = BigInt(guild.permissions || "0");
+
   return guild.owner || (permissions & 8n) === 8n;
 }
 
@@ -203,12 +211,20 @@ function adminIds() {
     .filter(Boolean);
 }
 
+function saveSession(req) {
+  return new Promise((resolve, reject) => {
+    req.session.save(error => error ? reject(error) : resolve());
+  });
+}
+
+/* DISCORD GİRİŞİ */
+
 app.get("/auth/discord", (req, res) => {
   const state = crypto.randomBytes(32).toString("hex");
   req.session.oauthState = state;
 
   const params = new URLSearchParams({
-    client_id: process.env.CLIENT_ID,
+    client_id: CLIENT_ID,
     redirect_uri: REDIRECT_URI,
     response_type: "code",
     scope: "identify guilds",
@@ -231,7 +247,7 @@ app.get("/auth/discord/callback", async (req, res) => {
     delete req.session.oauthState;
 
     const body = new URLSearchParams({
-      client_id: process.env.CLIENT_ID,
+      client_id: CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
       grant_type: "authorization_code",
       code: req.query.code,
@@ -242,14 +258,20 @@ app.get("/auth/discord/callback", async (req, res) => {
       "https://discord.com/api/oauth2/token",
       {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
         body
       }
     );
 
     const profile = await discordRequest(
       "https://discord.com/api/users/@me",
-      { headers: { Authorization: `Bearer ${token.access_token}` } }
+      {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`
+        }
+      }
     );
 
     await pool.query(
@@ -279,14 +301,11 @@ app.get("/auth/discord/callback", async (req, res) => {
     );
 
     await new Promise((resolve, reject) => {
-      req.session.regenerate(err => err ? reject(err) : resolve());
+      req.session.regenerate(error => error ? reject(error) : resolve());
     });
 
     req.session.userId = profile.id;
-
-    await new Promise((resolve, reject) => {
-      req.session.save(err => err ? reject(err) : resolve());
-    });
+    await saveSession(req);
 
     res.redirect("/");
   } catch (error) {
@@ -294,6 +313,8 @@ app.get("/auth/discord/callback", async (req, res) => {
     res.status(500).send("Giriş yapılamadı. Daha sonra tekrar dene.");
   }
 });
+
+/* HESAP */
 
 app.get("/api/me", requireLogin, async (req, res) => {
   try {
@@ -317,31 +338,46 @@ app.get("/api/me", requireLogin, async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Hesap bilgileri alınamadı." });
+    res.status(500).json({
+      error: "Hesap bilgileri alınamadı."
+    });
   }
 });
+
+/* SUNUCULAR */
 
 app.get("/api/guilds", requireLogin, async (req, res) => {
   try {
     const guilds = await getUserGuilds(req.session.userId);
 
-    let botGuildIds = new Set();
-    if (process.env.BOT_TOKEN) {
-      try {
-        const botGuilds = await discordRequest(
-          "https://discord.com/api/users/@me/guilds",
-          { headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` } }
-        );
-        botGuildIds = new Set(botGuilds.map(g => g.id));
-      } catch (error) {
-        console.warn("Bot sunucu listesi henüz alınamadı.");
-      }
-    }
-
     const allowed = guilds.filter(guild => {
       const permissions = BigInt(guild.permissions || "0");
       return guild.owner || (permissions & 8n) === 8n;
     });
+
+    let botGuildIds = new Set();
+
+    if (process.env.BOT_TOKEN) {
+      const checks = await Promise.all(
+        allowed.map(async guild => {
+          try {
+            await discordRequest(
+              `https://discord.com/api/guilds/${guild.id}`,
+              {
+                headers: {
+                  Authorization: `Bot ${process.env.BOT_TOKEN}`
+                }
+              }
+            );
+            return guild.id;
+          } catch {
+            return null;
+          }
+        })
+      );
+
+      botGuildIds = new Set(checks.filter(Boolean));
+    }
 
     res.json(allowed.map(guild => ({
       id: guild.id,
@@ -351,14 +387,18 @@ app.get("/api/guilds", requireLogin, async (req, res) => {
     })));
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Sunucular alınamadı." });
+    res.status(500).json({
+      error: "Sunucular alınamadı."
+    });
   }
 });
 
 app.get("/api/guild/:id", requireLogin, async (req, res) => {
   try {
     if (!(await canManageGuild(req.session.userId, req.params.id))) {
-      return res.status(403).json({ error: "Bu sunucuyu yönetme yetkin yok." });
+      return res.status(403).json({
+        error: "Bu sunucuyu yönetme yetkin yok."
+      });
     }
 
     const result = await pool.query(
@@ -373,17 +413,22 @@ app.get("/api/guild/:id", requireLogin, async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Sunucu ayarları alınamadı." });
+    res.status(500).json({
+      error: "Sunucu ayarları alınamadı."
+    });
   }
 });
 
 app.put("/api/guild/:id", requireLogin, async (req, res) => {
   try {
     if (!(await canManageGuild(req.session.userId, req.params.id))) {
-      return res.status(403).json({ error: "Yetkin bulunmuyor." });
+      return res.status(403).json({
+        error: "Yetkin bulunmuyor."
+      });
     }
 
     const { section, values } = req.body;
+
     const allowed = [
       "general", "tickets", "moderation", "welcome",
       "logs", "automod", "autoroles", "autoreplies",
@@ -396,7 +441,9 @@ app.put("/api/guild/:id", requireLogin, async (req, res) => {
       typeof values !== "object" ||
       Array.isArray(values)
     ) {
-      return res.status(400).json({ error: "Geçersiz ayar." });
+      return res.status(400).json({
+        error: "Geçersiz ayar."
+      });
     }
 
     const current = await pool.query(
@@ -407,10 +454,10 @@ app.put("/api/guild/:id", requireLogin, async (req, res) => {
     const settings = current.rows[0]?.settings || {};
     settings[section] = values;
 
-    const language = section === "general" &&
-      validLanguage(values.language)
-      ? values.language
-      : null;
+    const language =
+      section === "general" && validLanguage(values.language)
+        ? values.language
+        : null;
 
     await pool.query(
       `INSERT INTO dynex_guild_settings (guild_id, language, settings)
@@ -425,9 +472,13 @@ app.put("/api/guild/:id", requireLogin, async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Ayarlar kaydedilemedi." });
+    res.status(500).json({
+      error: "Ayarlar kaydedilemedi."
+    });
   }
 });
+
+/* HESAP AYARLARI */
 
 app.put("/api/account", requireLogin, async (req, res) => {
   const { language, themeColor } = req.body;
@@ -451,9 +502,14 @@ app.put("/api/account", requireLogin, async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ error: "Ayarlar kaydedilemedi." });
+    console.error(error);
+    res.status(500).json({
+      error: "Ayarlar kaydedilemedi."
+    });
   }
 });
+
+/* İŞLEMLER */
 
 app.get("/api/transactions", requireLogin, async (req, res) => {
   try {
@@ -464,42 +520,71 @@ app.get("/api/transactions", requireLogin, async (req, res) => {
        ORDER BY created_at DESC LIMIT 100`,
       [req.session.userId]
     );
+
     res.json(result.rows);
   } catch (error) {
-    res.status(500).json({ error: "İşlemler alınamadı." });
+    res.status(500).json({
+      error: "İşlemler alınamadı."
+    });
   }
 });
+
+/* REKLAMLAR */
 
 app.get("/api/ads", requireLogin, async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT id, description, status, queue_number, created_at
-       FROM dynex_ads WHERE user_id=$1
+       FROM dynex_ads
+       WHERE user_id=$1
        ORDER BY created_at DESC`,
       [req.session.userId]
     );
+
     res.json(result.rows);
   } catch (error) {
-    res.status(500).json({ error: "Reklamlar alınamadı." });
+    res.status(500).json({
+      error: "Reklamlar alınamadı."
+    });
   }
 });
 
 app.post("/api/ads", requireLogin, async (req, res) => {
   return res.status(503).json({
-    error: "Reklam satın alma sistemi botlar ve ödeme sistemi hazırlandığında açılacak."
+    error: "Reklam satın alma ve ödeme sistemi henüz etkinleştirilmedi."
   });
 });
+
+/* PREMIUM */
+
+app.post("/api/premium/purchase", requireLogin, async (req, res) => {
+  return res.status(503).json({
+    error: "Premium ödeme sistemi henüz etkinleştirilmedi."
+  });
+});
+
+app.post("/api/premium/cancel", requireLogin, async (req, res) => {
+  return res.status(503).json({
+    error: "Premium iptal sistemi henüz etkinleştirilmedi."
+  });
+});
+
+/* ÇIKIŞ */
 
 app.post("/auth/logout", requireLogin, (req, res) => {
   req.session.destroy(error => {
     if (error) {
-      return res.status(500).json({ error: "Çıkış yapılamadı." });
+      return res.status(500).json({
+        error: "Çıkış yapılamadı."
+      });
     }
 
     res.clearCookie("dynex.sid");
     res.json({ success: true });
   });
 });
+
+/* SAYFA */
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
